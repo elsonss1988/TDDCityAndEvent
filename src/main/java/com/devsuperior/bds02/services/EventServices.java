@@ -9,8 +9,11 @@ import com.devsuperior.bds02.services.exceptions.DataBaseException;
 import com.devsuperior.bds02.services.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import javax.persistence.EntityNotFoundException;
 
 @Service
 public class EventServices {
@@ -27,7 +30,7 @@ public class EventServices {
             event.setCity(new City(eventDTO.getCityId(), null));
             event = repository.save(event);
             return new EventDTO(event);
-        }catch (ResourceNotFoundException e){
+        }catch (EntityNotFoundException e){
             throw new ResourceNotFoundException("Entidade nao encontrada");
         }catch (DataIntegrityViolationException e){
                 throw new DataBaseException("Integrity Violation");
