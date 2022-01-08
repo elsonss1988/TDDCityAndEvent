@@ -8,6 +8,7 @@ import com.devsuperior.bds02.services.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,7 +22,7 @@ public class CityServices {
 
     @Transactional(readOnly = true)
     public List<CityDTO> findAll(){
-        List<City> list=repository.findAll();
+        List<City> list=repository.findAll(Sort.by("name"));
         List<CityDTO> listDTO = list.stream().map(x->new CityDTO(x)).collect(Collectors.toList());
         return listDTO;
     }
@@ -34,12 +35,12 @@ public class CityServices {
         return new CityDTO(city);
     }
 
-    @Transactional
-    public void delete(Long Id){
+     public void delete(Long id){
         try {
-            repository.deleteById(Id);
+            repository.deleteById(id);
+            System.out.println();
         }catch(EmptyResultDataAccessException e){
-            throw new ResourceNotFoundException("Id not found " +Id);
+            throw new ResourceNotFoundException("Id not found " +id);
         }catch (DataIntegrityViolationException e){
             throw new DataBaseException("Integrity Violation");
         }
